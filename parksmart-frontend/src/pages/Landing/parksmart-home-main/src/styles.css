@@ -1,0 +1,188 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 0.875rem;
+
+  --background: oklch(0.975 0.012 300);
+  --foreground: oklch(0.24 0.07 292);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.07 292);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.07 292);
+
+  --primary: oklch(0.55 0.23 292);
+  --primary-foreground: oklch(0.99 0 0);
+
+  --secondary: oklch(0.95 0.025 297);
+  --secondary-foreground: oklch(0.28 0.08 292);
+
+  --muted: oklch(0.95 0.025 297);
+  --muted-foreground: oklch(0.52 0.05 292);
+
+  --accent: oklch(0.9 0.05 296);
+  --accent-foreground: oklch(0.28 0.08 292);
+
+  --destructive: oklch(0.55 0.2 22);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.88 0.035 297);
+  --input: oklch(0.88 0.035 297);
+  --ring: oklch(0.55 0.23 292);
+
+  --violet: oklch(0.55 0.23 292);
+  --violet-glow: oklch(0.62 0.22 298);
+  --cyan: oklch(0.6 0.13 220);
+  --magenta: oklch(0.58 0.23 340);
+
+  --success: oklch(0.58 0.16 152);
+  --danger: oklch(0.57 0.2 22);
+
+  --panel: oklch(1 0 0);
+  --panel-2: oklch(0.97 0.02 298);
+
+  --gradient-brand:
+    linear-gradient(
+      100deg,
+      oklch(0.5 0.23 292),
+      oklch(0.62 0.21 300)
+    );
+
+  --gradient-headline:
+    linear-gradient(
+      92deg,
+      oklch(0.55 0.23 292),
+      oklch(0.55 0.22 330)
+    );
+
+  --gradient-cta:
+    linear-gradient(
+      100deg,
+      oklch(0.5 0.22 292),
+      oklch(0.58 0.2 268)
+    );
+
+  --gradient-panel:
+    linear-gradient(
+      160deg,
+      oklch(1 0 0),
+      oklch(0.975 0.02 298)
+    );
+
+  --shadow-glow:
+    0 14px 34px -14px oklch(0.55 0.23 292 / 45%);
+
+  --shadow-panel:
+    0 20px 50px -30px oklch(0.4 0.12 292 / 35%);
+
+  --chart-1: oklch(0.55 0.23 292);
+  --chart-2: oklch(0.6 0.13 220);
+  --chart-3: oklch(0.58 0.16 152);
+  --chart-4: oklch(0.58 0.23 340);
+  --chart-5: oklch(0.72 0.15 85);
+
+  --sidebar: oklch(0.98 0.015 300);
+  --sidebar-foreground: oklch(0.24 0.07 292);
+
+  --sidebar-primary: oklch(0.55 0.23 292);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+
+  --sidebar-accent: oklch(0.95 0.025 297);
+  --sidebar-accent-foreground: oklch(0.28 0.08 292);
+
+  --sidebar-border: oklch(0.88 0.035 297);
+  --sidebar-ring: oklch(0.55 0.23 292);
+}
+
+/* Base styles */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Sora", ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-headline);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-brand-gradient {
+    background: var(--gradient-brand);
+  }
+
+  .bg-cta-gradient {
+    background: var(--gradient-cta);
+  }
+
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .panel {
+    background: var(--gradient-panel);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(8px);
+  }
+
+  .lens-ring {
+    box-shadow:
+      0 0 0 3px oklch(0.58 0.24 291 / 55%),
+      0 0 0 10px oklch(0.58 0.24 291 / 14%),
+      0 24px 50px -18px oklch(0.2 0.1 290 / 55%);
+  }
+
+  .aurora {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .aurora::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 70%;
+    z-index: -1;
+
+    background:
+      radial-gradient(
+        45% 55% at 12% 25%,
+        oklch(0.78 0.12 300 / 40%),
+        transparent 70%
+      ),
+      radial-gradient(
+        40% 50% at 85% 15%,
+        oklch(0.8 0.1 268 / 45%),
+        transparent 70%
+      ),
+      radial-gradient(
+        35% 45% at 60% 60%,
+        oklch(0.82 0.1 330 / 30%),
+        transparent 70%
+      );
+
+    filter: blur(20px);
+    pointer-events: none;
+  }
+}

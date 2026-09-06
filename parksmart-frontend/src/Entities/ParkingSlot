@@ -1,0 +1,45 @@
+{
+  "name": "ParkingSlot",
+  "type": "object",
+  "properties": {
+    "location_id": {
+      "type": "string",
+      "description": "Reference to ParkingLocation ID"
+    },
+    "slot_number": {
+      "type": "string",
+      "description": "Slot identifier (e.g., A1, B2)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "AVAILABLE",
+        "OCCUPIED",
+        "REVERSED",
+        "MAINTANACE"
+      ],
+      "default": "AVAILABLE",
+      "description": "Current status of the slot"
+    },
+    "slot_type": {
+      "type": "string",
+      "enum": [
+        "regular",
+        "compact",
+        "large",
+        "ev_charging",
+        "disabled"
+      ],
+      "default": "regular",
+      "description": "Type of parking slot"
+    },
+    "floor": {
+      "type": "string",
+      "description": "Floor or level (Ground, 1st, 2nd, etc.)"
+    }
+  },
+  "required": [
+    "location_id",
+    "slot_number"
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "userName": {
+      "type": "string",
+      "description": "Name of the user who made the booking"
+    },
+    "locationId": {
+      "type": "string",
+      "description": "Reference to ParkingLocation ID"
+    },
+    "slotId": {
+      "type": "string",
+      "description": "Reference to ParkingSlot ID"
+    },
+    "slotNumber": {
+      "type": "string",
+      "description": "Slot number for easy reference"
+    },
+    "locationName": {
+      "type": "string",
+      "description": "Location name for easy reference"
+    },
+    "bookingDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the booking"
+    },
+    "startTime": {
+      "type": "string",
+      "description": "Start time of parking"
+    },
+    "endTime": {
+      "type": "string",
+      "description": "End time of parking"
+    },
+    "durationHours": {
+      "type": "number",
+      "description": "Duration in hours"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Total payment amount"
+    },
+    "paymentStatus": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending",
+      "description": "Payment status"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "CONFIRMED",
+        "ACTIVE",
+        "COMPLETED",
+        "CANCELLED"
+      ],
+      "default": "CONFIRMED",
+      "description": "Booking status"
+    },
+    "paymentId": {
+      "type": "string",
+      "description": "Payment transaction ID"
+    },
+    "qrCode": {
+      "type": "string",
+      "description": "QR code for the booking"
+    },
+    "vehicleNumber": {
+      "type": "string",
+      "description": "Vehicle registration number"
+    }
+  },
+  "required": [
+    "user_email",
+    "location_id",
+    "slot_id",
+    "booking_date",
+    "start_time",
+    "duration_hours",
+    "total_amount"
+  ]
+}

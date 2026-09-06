@@ -1,0 +1,65 @@
+{
+  "name": "ParkingLocation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the parking location"
+    },
+    "address": {
+      "type": "string",
+      "description": "Full address of the parking location"
+    },
+    "city": {
+      "type": "string",
+      "description": "City name"
+    },
+    "area": {
+      "type": "string",
+      "description": "Area/locality name"
+    },
+    "pincode": {
+      "type": "string",
+      "description": "PIN code"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Latitude coordinate"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Longitude coordinate"
+    },
+    "total_slots": {
+      "type": "integer",
+      "description": "Total number of parking slots"
+    },
+    "hourly_rate": {
+      "type": "number",
+      "description": "Hourly parking rate"
+    },
+    "facilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available facilities like CCTV, EV Charging, etc."
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image of the parking location"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the location is active"
+    }
+  },
+  "required": [
+    "name",
+    "address",
+    "city",
+    "hourly_rate",
+    "total_slots"
+  ]
+}
