@@ -30,6 +30,7 @@
 <java.version>17</java.version>
 <lombok.version>1.18.32</lombok.version>
 </properties>
+<mainClass>com.parksmart.ParkSmartApplication</mainClass>
 <dependencies>
 <!--  Spring Security  -->
 <dependency>
