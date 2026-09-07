@@ -105,7 +105,10 @@ const handleRegister = async (e) => {
 };
 
 const handleGoogleLogin = () => {
-  window.location.href = "http://localhost:8080/oauth2/authorization/google";
+  const backendUrl = import.meta.env.VITE_API_URL.replace("/api", "");
+
+  window.location.href =
+    `${backendUrl}/oauth2/authorization/google`;
 };
 
 const renderSocialIcons = () => (
