@@ -13,6 +13,8 @@ import com.parksmart.repository.SlotRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Scheduled;
+import java.time.ZoneId;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -137,5 +139,38 @@ public BookingResponse getBookingById(Long id) {
             .orElseThrow(() -> new RuntimeException("Booking not found"));
     return mapToResponse(booking);
 }
+/* =========================================================
+   AUTO-COMPLETE EXPIRED BOOKINGS
+   Runs every minute
+   ========================================================= */
+@Scheduled(fixedRate = 60000)
+@Transactional
+public void updateExpiredBookings() {
 
+    LocalDateTime now = LocalDateTime.now(
+            ZoneId.of("Asia/Kolkata")
+    );
+
+    List<Booking> bookings = bookingRepo.findAll();
+
+    for (Booking booking : bookings) {
+
+        if (booking.getStatus() == BookingStatus.CONFIRMED
+                && booking.getEndTime() != null
+                && !booking.getEndTime().isAfter(now)) {
+
+            booking.setStatus(BookingStatus.COMPLETED);
+
+            // Free the parking slot
+            Slot slot = booking.getSlot();
+
+            if (slot != null) {
+                slot.setStatus(SlotStatus.AVAILABLE);
+                slotRepo.save(slot);
+            }
+
+            bookingRepo.save(booking);
+        }
+    }
+}
 }
