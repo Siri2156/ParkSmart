@@ -123,12 +123,33 @@ session.removeAttribute("GOOGLE_MODE");
          */
         if (user == null) {
 
-            response.sendRedirect(
-                    frontendUrl + "/login?googleError=not_registered"
-            );
+    if ("register".equalsIgnoreCase(googleMode)) {
 
-            return;
-        }
+        User newUser = new User();
+
+        newUser.setEmail(email);
+        newUser.setName(
+                name != null ? name : "User"
+        );
+        newUser.setRole("USER");
+
+        user = userRepository.save(newUser);
+
+        session.setAttribute("USER", user);
+
+        response.sendRedirect(
+                frontendUrl + "/user-dashboard"
+        );
+
+        return;
+    }
+
+    response.sendRedirect(
+            frontendUrl + "/login?googleError=not_registered"
+    );
+
+    return;
+}
 
         /*
          * Existing registered user.
