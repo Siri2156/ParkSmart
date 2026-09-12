@@ -4,6 +4,8 @@ import com.parksmart.dto.BookingRequest;
 import com.parksmart.dto.BookingResponse;
 import com.parksmart.service.BookingService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -32,4 +34,12 @@ public class BookingController {
     public List<BookingResponse> listBookings() {
         return service.getAllBookingsForAdmin();
     }
+    @PutMapping("/{id}/cancel")
+public ResponseEntity<BookingResponse> cancelBooking(
+        @PathVariable Long id) {
+
+    return ResponseEntity.ok(
+            service.cancelBooking(id)
+    );
+}
 }

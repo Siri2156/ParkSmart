@@ -88,15 +88,42 @@ React.useEffect(() => {
       const booking = bookings.find(b => b.id === bookingId);
       
       // Update booking status
-      const res = await fetch(`${BASE_URL}/bookings/${bookingId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          status: 'CANCELLED',
-          paymentStatus: 'REFUNDED'
-        })
-      });
-      if (!res.ok) throw new Error('Failed to cancel booking');
+      const cancelBookingMutation = useMutation({
+  mutationFn: async (bookingId) => {
+
+    const res = await fetch(
+      `${BASE_URL}/bookings/${bookingId}/cancel`,
+      {
+        method: 'PUT',
+        credentials: 'include',
+      }
+    );
+
+    if (!res.ok) {
+      const message = await res.text();
+      throw new Error(message || 'Failed to cancel booking');
+    }
+
+    return await res.json();
+  },
+
+  onSuccess: () => {
+    queryClient.invalidateQueries({
+      queryKey: ['userBookings']
+    });
+
+    queryClient.invalidateQueries({
+      queryKey: ['parkingLocations']
+    });
+
+    toast.success('Booking cancelled successfully');
+  },
+
+  onError: (error) => {
+    console.error('Cancel booking error:', error);
+    toast.error(error.message || 'Failed to cancel booking');
+  },
+});
 
       // Update slot status back to available
       if (booking?.slotId) {

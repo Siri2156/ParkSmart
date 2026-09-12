@@ -173,4 +173,37 @@ public void updateExpiredBookings() {
         }
     }
 }
+/* =========================================================
+   CANCEL BOOKING
+   ========================================================= */
+@Transactional
+public BookingResponse cancelBooking(Long bookingId) {
+
+    Booking booking = bookingRepo.findById(bookingId)
+            .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+    // Don't allow cancellation of already completed/cancelled bookings
+    if (booking.getStatus() == BookingStatus.COMPLETED) {
+        throw new RuntimeException("Completed booking cannot be cancelled");
+    }
+
+    if (booking.getStatus() == BookingStatus.CANCELLED) {
+        throw new RuntimeException("Booking is already cancelled");
+    }
+
+    // Change booking status
+    booking.setStatus(BookingStatus.CANCELLED);
+
+    // Release the parking slot
+    Slot slot = booking.getSlot();
+
+    if (slot != null) {
+        slot.setStatus(SlotStatus.AVAILABLE);
+        slotRepo.save(slot);
+    }
+
+    bookingRepo.save(booking);
+
+    return mapToResponse(booking);
+}
 }
