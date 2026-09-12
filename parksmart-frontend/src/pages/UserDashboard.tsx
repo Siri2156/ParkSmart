@@ -83,14 +83,11 @@ React.useEffect(() => {
   });
 }, [locations]);
 
-  const cancelBookingMutation = useMutation({
-    mutationFn: async (bookingId) => {
-      const booking = bookings.find(b => b.id === bookingId);
-      
-      // Update booking status
-      const cancelBookingMutation = useMutation({
+// ===============================
+// CANCEL BOOKING
+// ===============================
+const cancelBookingMutation = useMutation({
   mutationFn: async (bookingId) => {
-
     const res = await fetch(
       `${BASE_URL}/bookings/${bookingId}/cancel`,
       {
@@ -125,29 +122,14 @@ React.useEffect(() => {
   },
 });
 
-      // Update slot status back to available
-      if (booking?.slotId) {
-        await fetch(`${BASE_URL}/slots/${booking.slotId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'AVAILABLE' })
-        });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userBookings'] });
-      queryClient.invalidateQueries({ queryKey: ['locationSlots'] });
-      toast.success('Booking cancelled successfully');
-    },
-  });
 
-  const activeBookings = bookings.filter(b => 
-    b.status === 'CONFIRMED' || b.status === 'ACTIVE'
-  );
+const activeBookings = bookings.filter(b =>
+  b.status === 'CONFIRMED' || b.status === 'ACTIVE'
+);
 
-  const pastBookings = bookings.filter(b => 
-    b.status === 'COMPLETED' || b.status === 'CANCELLED'
-  );
+const pastBookings = bookings.filter(b =>
+  b.status === 'COMPLETED' || b.status === 'CANCELLED'
+);
 
   const totalSpent = bookings
     // Treat completed bookings as paid, since paymentStatus is not set by default.
