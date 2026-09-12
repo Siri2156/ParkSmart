@@ -38,20 +38,24 @@ export default function Layout() {
 
 const isAdmin = user?.role === "ADMIN";
 
-  useEffect(() => {
+useEffect(() => {
   fetch(`${BASE_URL}/auth/me`, {
     credentials: "include",
   })
     .then(res => res.ok ? res.json() : null)
     .then(data => {
       setUser(data);
+      if (!data) {
+        navigate("/login");
+      }
       setLoading(false);
     })
     .catch(() => {
       setUser(null);
       setLoading(false);
+      navigate("/login");
     });
-}, []);
+}, [navigate]);
 
 useEffect(() => {
 
