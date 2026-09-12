@@ -40,6 +40,16 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             Authentication authentication
     ) throws IOException, ServletException {
 
+        HttpSession session = request.getSession(true);
+
+String googleMode = (String) session.getAttribute("GOOGLE_MODE");
+
+if (googleMode == null) {
+    googleMode = "login";
+}
+
+session.removeAttribute("GOOGLE_MODE");
+
         // Get Google user information
         OAuth2User oauthUser =
                 (OAuth2User) authentication.getPrincipal();
@@ -85,7 +95,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             userRepository.save(adminUser);
 
             // Create application session
-            HttpSession session = request.getSession(true);
+            session = request.getSession(true);
             session.setAttribute("USER", adminUser);
 
             // Directly go to admin dashboard
@@ -131,7 +141,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         // Create application session
-        HttpSession session = request.getSession(true);
+        session = request.getSession(true);
         session.setAttribute("USER", user);
 
         /*

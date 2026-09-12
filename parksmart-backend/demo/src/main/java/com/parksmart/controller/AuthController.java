@@ -177,6 +177,19 @@ public class AuthController {
 
         return ResponseEntity.ok(user);
     }
+    @PostMapping("/google/mode")
+public ResponseEntity<?> setGoogleMode(
+        @RequestParam String mode,
+        HttpSession session
+) {
+    if (!mode.equals("login") && !mode.equals("register")) {
+        return ResponseEntity.badRequest().body("Invalid Google mode");
+    }
+
+    session.setAttribute("GOOGLE_MODE", mode);
+
+    return ResponseEntity.ok().build();
+}
 
 
     /*

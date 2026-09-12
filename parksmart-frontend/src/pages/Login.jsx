@@ -153,13 +153,23 @@ const handleRegister = async (e) => {
   }
 };
 
-const handleGoogleLogin = () => {
-  const apiUrl =
-    import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+const handleGoogleLogin = async () => {
+  try {
+    await fetch(`${BASE_URL}/auth/google/mode?mode=${isRegister ? "register" : "login"}`, {
+      method: "POST",
+      credentials: "include",
+    });
 
-  const backendUrl = apiUrl.replace(/\/api\/?$/, "");
+    const apiUrl =
+      import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
-  window.location.href = `${backendUrl}/oauth2/authorization/google`;
+    const backendUrl = apiUrl.replace(/\/api\/?$/, "");
+
+    window.location.href = `${backendUrl}/oauth2/authorization/google`;
+  } catch (error) {
+    console.error("Google login error:", error);
+    alert("Unable to continue with Google.");
+  }
 };
 
 const renderSocialIcons = () => (
