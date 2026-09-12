@@ -209,7 +209,7 @@ const pastBookings = bookings.filter(b =>
               <>
                 <Button
                   size="sm"
-                  onClick={() => navigate(`/booking-confirmation?id=${booking.id}`)}
+                  onClick={() => navigate(`/booking-confirmation?bookingId=${booking.id}`)}
                   className="flex-1 bg-indigo-600 hover:bg-indigo-700"
                 >
                   View Details

@@ -14,6 +14,17 @@ export default function BookingConfirmation() {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const bookingId = urlParams.get('bookingId');
+  const navigateToLocation = () => {
+  if (booking?.latitude == null || booking?.longitude == null) {
+    alert("Location coordinates are not available.");
+    return;
+  }
+
+  const googleMapsUrl =
+    `https://www.google.com/maps/dir/?api=1&destination=${booking.latitude},${booking.longitude}`;
+
+  window.open(googleMapsUrl, '_blank');
+};
   const hasAskedNavigation = useRef(false);
 const bookingRef = useRef(null);
 
@@ -188,25 +199,37 @@ const bookingRef = useRef(null);
         </motion.div>
 
         {/* Action Buttons */}
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => window.print()}
-            className="w-full"
-          >
-            <Download className="w-5 h-5 mr-2" />
-            Download Receipt
-          </Button>
-          <Button
-            size="lg"
-            onClick={() => navigate('/user-dashboard')}
-            className="w-full bg-indigo-600 hover:bg-indigo-700"
-          >
-            <Home className="w-5 h-5 mr-2" />
-            Go to Dashboard
-          </Button>
-        </div>
+        {/* Action Buttons */}
+<div className="grid sm:grid-cols-3 gap-4">
+  <Button
+    variant="outline"
+    size="lg"
+    onClick={() => window.print()}
+    className="w-full"
+  >
+    <Download className="w-5 h-5 mr-2" />
+    Download Receipt
+  </Button>
+
+  <Button
+    variant="outline"
+    size="lg"
+    onClick={navigateToLocation}
+    className="w-full"
+  >
+    <MapPin className="w-5 h-5 mr-2" />
+    Navigate
+  </Button>
+
+  <Button
+    size="lg"
+    onClick={() => navigate('/user-dashboard')}
+    className="w-full bg-indigo-600 hover:bg-indigo-700"
+  >
+    <Home className="w-5 h-5 mr-2" />
+    Go to Dashboard
+  </Button>
+</div>
 
         {/* Instructions */}
         <Card className="mt-6">
