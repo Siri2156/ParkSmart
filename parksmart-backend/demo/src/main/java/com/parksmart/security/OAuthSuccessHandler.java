@@ -2,6 +2,7 @@ package com.parksmart.security;
 
 import com.parksmart.model.User;
 import com.parksmart.repository.UserRepository;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,27 +40,114 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             Authentication authentication
     ) throws IOException, ServletException {
 
-        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+        // Get Google user information
+        OAuth2User oauthUser =
+                (OAuth2User) authentication.getPrincipal();
 
         String email = oauthUser.getAttribute("email");
         String name = oauthUser.getAttribute("name");
 
-        String role = email.equalsIgnoreCase(adminEmail)
-                ? "ADMIN"
-                : "USER";
+        // Safety check
+        if (email == null || email.isBlank()) {
+            response.sendRedirect(
+                    frontendUrl + "/login?googleError=invalid"
+            );
+            return;
+        }
 
-        User user = userRepository.findByEmail(email)
-                .orElseGet(() -> {
-                    User u = new User();
-                    u.setEmail(email);
-                    u.setName(name);
-                    u.setRole(role);
-                    return userRepository.save(u);
-                });
+        /*
+         * CASE 1:
+         * Check whether the Google email belongs to the admin.
+         *
+         * The admin does not need to be a normal registered user.
+         * If the Google email matches admin.email,
+         * allow direct admin login.
+         */
+        if (email.equalsIgnoreCase(adminEmail)) {
 
+            User adminUser = userRepository
+                    .findByEmail(email)
+                    .orElseGet(() -> {
+
+                        User newAdmin = new User();
+
+                        newAdmin.setEmail(email);
+                        newAdmin.setName(
+                                name != null ? name : "Admin"
+                        );
+                        newAdmin.setRole("ADMIN");
+
+                        return userRepository.save(newAdmin);
+                    });
+
+            // Make sure the account has ADMIN role
+            adminUser.setRole("ADMIN");
+            userRepository.save(adminUser);
+
+            // Create application session
+            HttpSession session = request.getSession(true);
+            session.setAttribute("USER", adminUser);
+
+            // Directly go to admin dashboard
+            response.sendRedirect(frontendUrl + "/admin");
+            return;
+        }
+
+        /*
+         * CASE 2:
+         * Normal Google user.
+         *
+         * Only allow login if the email already exists
+         * in our database.
+         */
+        User user = userRepository
+                .findByEmail(email)
+                .orElse(null);
+
+        /*
+         * CASE 3:
+         * Google email is NOT registered.
+         *
+         * Do NOT create a database user.
+         * Send the user back to Login with an error flag.
+         */
+        if (user == null) {
+
+            response.sendRedirect(
+                    frontendUrl + "/login?googleError=not_registered"
+            );
+
+            return;
+        }
+
+        /*
+         * Existing registered user.
+         *
+         * Preserve their existing role.
+         */
+        if (user.getRole() == null || user.getRole().isBlank()) {
+            user.setRole("USER");
+            userRepository.save(user);
+        }
+
+        // Create application session
         HttpSession session = request.getSession(true);
         session.setAttribute("USER", user);
 
-        response.sendRedirect(frontendUrl + "/login");
+        /*
+         * Redirect based on role.
+         */
+        if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+
+            response.sendRedirect(
+                    frontendUrl + "/admin"
+            );
+
+        } else {
+
+            response.sendRedirect(
+                    frontendUrl + "/user-dashboard"
+            );
+        }
     }
 }

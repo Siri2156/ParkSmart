@@ -25,7 +25,41 @@ const [email, setEmail] = useState("");
         else if (user?.role === "USER") navigate("/user-dashboard");
       })
       .catch(() => {});
-  }, []);
+  }, [navigate]);
+
+  useEffect(() => {
+
+    const params = new URLSearchParams(location.search);
+
+    const googleError = params.get("googleError");
+
+    if (googleError === "not_registered") {
+
+      alert(
+        "You are not registered. Please register first."
+      );
+
+      // Remove the query parameter while going to register
+      navigate("/register", {
+        replace: true
+      });
+
+      return;
+    }
+
+    if (googleError === "invalid") {
+
+      alert(
+        "Unable to get your Google account information. Please try again."
+      );
+
+      navigate("/login", {
+        replace: true
+      });
+
+    }
+
+  }, [location.search, navigate]);
 
   const handleLogin = async (e) => {
   e.preventDefault();
@@ -43,10 +77,25 @@ const [email, setEmail] = useState("");
       }),
     });
 
-    if (!response.ok) {
-      alert("Invalid email or password");
+    if (response.status === 404) {
+      alert("You are not registered. Please register first.");
+
+      navigate("/register");
       return;
     }
+        if (response.status === 401) {
+      alert("Invalid email or password");
+
+      return;
+    }
+
+    // Other errors
+    if (!response.ok) {
+      alert("Unable to login. Please try again.");
+
+      return;
+    }
+
 
     const user = await response.json();
 
