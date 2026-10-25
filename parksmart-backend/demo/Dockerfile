@@ -13,6 +13,14 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
+COPY isrgrootx1.pem /app/isrgrootx1.pem
+
+RUN keytool -importcert \
+    -file /app/isrgrootx1.pem \
+    -alias letsencrypt-isrg-root-x1 \
+    -cacerts \
+    -storepass changeit \
+    -noprompt
 
 EXPOSE 8080
 
